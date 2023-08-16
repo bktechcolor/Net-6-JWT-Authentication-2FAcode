@@ -10,23 +10,25 @@ using Microsoft.OpenApi.Models;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 var config = builder.Configuration;
 builder.Services.AddControllers();
 builder.Services.AddDbContext<ApplicationDbContext>( 
     options=> options.UseSqlServer(config.GetConnectionString("DefaultConnection")));
 
 // For Identity
-
 builder.Services.AddIdentity<IdentityUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 
 //Add config for required email
-builder.Services.Configure<IdentityOptions>(opts => opts.SignIn.RequireConfirmedEmail = true);
+builder.Services.Configure<IdentityOptions>(opts => 
+                 opts.SignIn.RequireConfirmedEmail = true);
+
+// configure time expire for Token
+builder.Services.Configure<DataProtectionTokenProviderOptions>(opts => 
+                 opts.TokenLifespan = TimeSpan.FromHours(10));
 
 //For Authentication
-
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -46,16 +48,12 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-
-
 //Add Email Configs
-
 var emailConfig = config.GetSection("EmailConfiguration").Get<EmailConfiguration>();
 builder.Services.AddSingleton(emailConfig);
 builder.Services.AddScoped<IEmailService, EmailService>();
-
-
 builder.Services.AddControllers();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(option =>
