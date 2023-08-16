@@ -1,6 +1,12 @@
-# Net-6-Authentication
+### Net-6-Authentication
 Asp Netcore Authentication vs Authorization .Net 6
-# Function
+### Used Package
+1. AspNetcore.Authentication.JwtBearer
+2. AspNetcore.Identity.EntityFrameworkCore
+3. EntityFrameworkCore.SqlServer
+4. EntityFrameworkCore.Tools
+5. Netcore.MailKit
+### Functions
 1. register new user with 3 role (HR,Admin,User)
 2. comfirm link for verification sent to Email after user register
 3. Login with username and password and check if 2FA enable.
